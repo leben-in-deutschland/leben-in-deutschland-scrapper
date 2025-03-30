@@ -328,6 +328,15 @@
         "email": "marcus.buckel@kompetenzundbildung.de"
       },
       {
+        "regierungsbezirk": "Hochschwarzwald",
+        "plz": 79189,
+        "ort": "Bad Krozingen",
+        "einrichtung": "Volkshochschule Südlicher Breisgau",
+        "straße": "Basler Str. 1",
+        "telefon": "07633-92650",
+        "email": "info@vhs-bad-krotzingen.de"
+      },
+      {
         "regierungsbezirk": "Schwäbisch Hall",
         "plz": 74523,
         "ort": "Schwäbisch Hall",
@@ -353,6 +362,15 @@
         "straße": "U 1, 16-19",
         "telefon": "0621-1076-0",
         "email": "deutsch@abendakademie-mannheim.de"
+      },
+      {
+        "regierungsbezirk": "Stadtkreis",
+        "plz": 68161,
+        "ort": "Mannheim",
+        "einrichtung": "Büro für Aus- und Weiterbildung",
+        "straße": "P3,6",
+        "telefon": "0621-25244",
+        "email": "info@bfaw.de"
       },
       {
         "regierungsbezirk": "Ludwigsburg",
@@ -1089,7 +1107,7 @@
         "email": "volkshochschule@stadt.bayreuth.de "
       },
       {
-        "regierungsbezirk": " ",
+        "regierungsbezirk": "Kreisfreie Stadt",
         "plz": 94327,
         "ort": "Bogen",
         "einrichtung": "VHS Straubing -Bogen",
@@ -1836,6 +1854,15 @@
         "email": "info@vhs-ua.de"
       },
       {
+        "regierungsbezirk": "Rhön Grabfeld",
+        "plz": 97638,
+        "ort": "Mellrichstadt",
+        "einrichtung": "VHS Rhön-Grabfeld gemeinnützige GmbH",
+        "straße": "Marktplatz 2",
+        "telefon": "09776-7090980",
+        "email": "integration@die-vhs.de"
+      },
+      {
         "regierungsbezirk": "Main-Spessart",
         "plz": 97753,
         "ort": "Karlstadt",
@@ -2338,7 +2365,7 @@
         "einrichtung": "VHS Main-Taunus-Kreis",
         "straße": "Pfarrgasse 38",
         "telefon": "06192-990118",
-        "email": "seibel@vhs-mtk.de"
+        "email": "flor@vhs-mtk.de"
       },
       {
         "regierungsbezirk": "Marburg-Biedenkopf",
@@ -3756,6 +3783,15 @@
         "email": "sputniki@arcor.de"
       },
       {
+        "regierungsbezirk": "Viersen",
+        "plz": 41747,
+        "ort": "Viersen",
+        "einrichtung": "Kreisvolkshochschule Viersen",
+        "straße": "Willy-Brand-Ring 40",
+        "telefon": "02162-934714",
+        "email": "Helga.Giesbertz@kreis-viersen.de"
+      },
+      {
         "regierungsbezirk": "Märkischer Kreis",
         "plz": 58791,
         "ort": "Werdohl",
@@ -4336,7 +4372,7 @@
         "plz": 48143,
         "ort": "Münster",
         "einrichtung": "VHS Münster",
-        "straße": "Aegidiimarkt 3",
+        "straße": "Aegidiistraße 70",
         "telefon": "0251/4924362",
         "email": "vhs@stadt-muenster.de"
       },
