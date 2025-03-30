@@ -2,7 +2,7 @@ import { Question, QuestionTranslation } from "../types/question";
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as path from 'path';
-import { BASE_URL, STATES, TARGET_LANGUAGES } from "../types/constants";
+import { STATES, TARGET_LANGUAGES } from "../types/constants";
 import { createHash } from "crypto";
 import existingQuestionJson from '../data/question.json';
 
@@ -216,7 +216,7 @@ const scrap = async (url: string, state: string) => {
         };
         question.question = pageData(element).find("strong.font-semibold").text().trim();
         if (pageData(element).find("img").length > 0) {
-            question.image = `${BASE_URL}${pageData(element).find("img").attr('src')}`;
+            question.image = `${process.env.BASE_URL}${pageData(element).find("img").attr('src')}`;
         }
         pageData(element).find("ul>li.mb-2").each((index, element) => {
             if ((pageData(element).find("span.absolute.left-2").length > 0)) {
@@ -236,7 +236,7 @@ const scrapStates = async () => {
     let questions: Question[] = [];
     for (let i = 0; i < STATES.length; i++) {
         questionsIndex = 0;
-        const tempQuestions = await scrap(`${BASE_URL}/fragen/${STATES[i]}`, STATES[i]);
+        const tempQuestions = await scrap(`${process.env.BASE_URL}/fragen/${STATES[i]}`, STATES[i]);
         questions = [...questions, ...tempQuestions];
     }
     return questions;
@@ -245,7 +245,7 @@ const scrapStates = async () => {
 const scrapAll = async () => {
     let questions: Question[] = [];
     const links = [];
-    const firstPage = `${BASE_URL}/fragen/1`
+    const firstPage = `${process.env.BASE_URL}/fragen/1`
     const $ = await cheerio.fromURL(firstPage);
     $('div > nav:nth-of-type(2) a').each((_, element) => {
         const href = $(element).attr('href');
