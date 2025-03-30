@@ -20,42 +20,14 @@ jobs:
           node-version: "latest"
 
       - name: Install dependencies
-        run: |
-          cd src/scrap
-          npm install
+        run: npm install
 
       - name: Sync
-        run: |
-          cd src/scrap
-          npm run prod
+        run: npm run prod
         env:
           TRANSLATOR_KEY: ${{ secrets.TRANSLATOR_KEY }}
           AI_URL: ${{ secrets.AI_URL }}
           AI_KEY: ${{ secrets.AI_KEY }}
-
-      - name: Move
-        run: |
-          cp src/scrap/data/question.json src/app/web/data/question.json
-          cp src/scrap/data/prüfstellen.json src/app/web/data/prüfstellen.json
-
-      - name: Check for changes
-        id: git_check
-        run: |
-          git add src/app/web/data/question.json
-          git add src/app/web/data/prüfstellen.json
-          if git diff --cached --quiet; then
-            echo "No changes detected"
-            echo "changed=false" >> $GITHUB_ENV
-          else
-            echo "Changes detected"
-            echo "changed=true" >> $GITHUB_ENV
-          fi
-
-      - name: Bump version if changes detected
-        if: env.changed == 'true'
-        working-directory: src/app/web
-        run: |
-          npm version patch --no-git-tag-version
 
       - name: Commit and Push Changes
         if: env.changed == 'true'
