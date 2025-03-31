@@ -31,6 +31,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
 
       - name: Commit and Push Changes
+        continue-on-error: true
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
