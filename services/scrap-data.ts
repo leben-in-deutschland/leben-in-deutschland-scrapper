@@ -245,8 +245,13 @@ const scrapStates = async () => {
 const scrapAll = async () => {
     let questions: Question[] = [];
     const links = [];
-    const firstPage = `${process.env.BASE_URL}/fragen/1`
-    const $ = await cheerio.fromURL(firstPage);
+    const firstPage = `${process.env.BASE_URL}/fragen/1`;
+    const res = await fetch(firstPage);
+    if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.status}`);
+    }
+    const html = await res.text();
+    const $ = cheerio.load(html);
     $('div > nav:nth-of-type(2) a').each((_, element) => {
         const href = $(element).attr('href');
         links.push(href);
