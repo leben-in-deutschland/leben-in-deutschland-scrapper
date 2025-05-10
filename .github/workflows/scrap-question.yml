@@ -28,7 +28,7 @@ jobs:
           TRANSLATOR_KEY: ${{ secrets.TRANSLATOR_KEY }}
           AI_URL: ${{ secrets.AI_URL }}
           AI_KEY: ${{ secrets.AI_KEY }}
-          BASE_URL: ${{ secrets.BASE_URL }}
+          BASE_URL: $BASE_URL
 
       - name: Commit and Push Changes
         continue-on-error: true
