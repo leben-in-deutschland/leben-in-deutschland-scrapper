@@ -2,24 +2,51 @@ import { Question, QuestionTranslation } from "../types/question";
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as path from 'path';
-import { STATES, TARGET_LANGUAGES } from "../types/constants";
+import { TARGET_LANGUAGES } from "../types/constants";
+import { STATE_REVERSE_MAPPING } from "../types/state-mapping";
 import { createHash } from "crypto";
 import existingQuestionJson from '../data/question.json';
 
 let questionsIndex = 0;
-const mapIndexToChoice = (index: number) => {
-    switch (index) {
-        case 0:
-            return 'a';
-        case 1:
-            return 'b';
-        case 2:
-            return 'c';
-        case 3:
-            return 'd';
-        default:
-            return '';
+
+const generateQuestionNumber = (url: string, element: any, index: number): string => {
+    const pageData = cheerio.load(element);
+    const questionIdMatch = pageData(element).attr('id') || '';
+    const extractedNum = questionIdMatch.match(/q(\d+)/);
+
+    if (extractedNum && extractedNum[1]) {
+        if (url.includes('/state-questions/')) {
+            const urlParts = url.split('/');
+            const stateNameIndex = urlParts.indexOf('state-questions') + 1;
+
+            if (stateNameIndex < urlParts.length) {
+                const stateName = urlParts[stateNameIndex];
+                const stateCode = STATE_REVERSE_MAPPING[stateName];
+
+                if (stateCode) {
+                    return `${stateCode.toUpperCase()}-${extractedNum[1]}`;
+                }
+            }
+        }
+
+        return extractedNum[1];
     }
+
+    if (url.includes('/state-questions/')) {
+        const urlParts = url.split('/');
+        const stateNameIndex = urlParts.indexOf('state-questions') + 1;
+
+        if (stateNameIndex < urlParts.length) {
+            const stateName = urlParts[stateNameIndex];
+            const stateCode = STATE_REVERSE_MAPPING[stateName];
+
+            if (stateCode) {
+                return `${stateCode.toUpperCase()}-${index}`;
+            }
+        }
+    }
+
+    return index.toString();
 };
 
 
@@ -192,14 +219,22 @@ async function findCategory(question: Question): Promise<"Rights & Freedoms" |
 const scrap = async (url: string, state: string) => {
     const questions: Question[] = [];
     const pageData = await cheerio.fromURL(url);
-    console.log(`Scraping ${url} and found ${pageData('div.relative>div.p-4>div.mb-8').length} questions`);
-    pageData('div.relative>div.p-4>div.mb-8').each((_, element) => {
+
+    const newStyleQuestions = pageData('div.card.question-container');
+
+    console.log(`Scraping ${url} and found ${newStyleQuestions.length} questions`);
+
+    // Reset questions index if this is a state URL
+    if (url.includes('/state-questions/')) {
+        questionsIndex = 0;
+    }
+
+    newStyleQuestions.each((_, element) => {
         questionsIndex++;
 
-        let num = questionsIndex.toString();
-        if (state) {
-            num = `${state.toUpperCase()}-${num}`;
-        }
+        // Generate question number based on URL and element
+        let num = generateQuestionNumber(url, element, questionsIndex);
+
         let question: Question = {
             num: num,
             question: '',
@@ -214,48 +249,72 @@ const scrap = async (url: string, state: string) => {
             context: '',
             id: ''
         };
-        question.question = pageData(element).find("strong.font-semibold").text().trim();
-        if (pageData(element).find("img").length > 0) {
-            question.image = `${process.env.BASE_URL}${pageData(element).find("img").attr('src')}`;
-        }
-        pageData(element).find("ul>li.mb-2").each((index, element) => {
-            if ((pageData(element).find("span.absolute.left-2").length > 0)) {
-                question[mapIndexToChoice(index)] = pageData(element).find("span.absolute.left-2").remove().end().text().trim();
-                question.solution = mapIndexToChoice(index);
+
+        question.question = pageData(element).find(".question-text h5").text().trim();
+
+        const imageClasses = [
+            ".question-image-square-large",
+            ".question-image-square",
+            ".question-image-rectangle",
+            ".question-image-horizontal",
+            ".question-image-vertical"
+        ];
+
+        let foundImage = false;
+        for (const imageClass of imageClasses) {
+            if (pageData(element).find(imageClass).length > 0) {
+                const imgSrc = pageData(element).find(imageClass).attr('src');
+                if (imgSrc) {
+                    question.image = imgSrc.startsWith('/')
+                        ? `${process.env.BASE_URL}${imgSrc}`
+                        : imgSrc;
+                    foundImage = true;
+                    break;
+                }
             }
-            else {
-                question[mapIndexToChoice(index)] = pageData(element).text().trim();
+        }
+
+        pageData(element).find(".card-body ul li.choice").each((_, choiceElement) => {
+            const option = pageData(choiceElement).find(".option").text().trim().toLowerCase();
+            const choiceText = pageData(choiceElement).find(".choice-text").text().trim();
+
+            if (option && question[option] !== undefined) {
+                question[option] = choiceText;
+
+                if (pageData(choiceElement).find(".answer-indicator").length > 0) {
+                    question.solution = option;
+                }
             }
         });
+
         questions.push(question);
     });
+
     return questions;
 };
 
-const scrapStates = async () => {
-    let questions: Question[] = [];
-    for (let i = 0; i < STATES.length; i++) {
-        questionsIndex = 0;
-        const tempQuestions = await scrap(`${process.env.BASE_URL}/fragen/${STATES[i]}`, STATES[i]);
-        questions = [...questions, ...tempQuestions];
+const fetchSitemap = async () => {
+    const sitemapUrl = `${process.env.BASE_URL}/sitemap.xml`;
+    const res = await fetch(sitemapUrl);
+    if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.status}`);
     }
-    return questions;
+    const xml = await res.text();
+    const $ = cheerio.load(xml, { xmlMode: true });
+    const urls: string[] = [];
+    $('url > loc').each((_, element) => {
+        const url = $(element).text();
+        if (/\/leben-in-deutschland-test\/(?!practice-test)/.test(url)) {
+            urls.push(url);
+        }
+    });
+    return urls;
 };
 
 const scrapAll = async () => {
     let questions: Question[] = [];
-    const links = [];
-    const firstPage = `${process.env.BASE_URL}/fragen/1`;
-    const res = await fetch(firstPage);
-    if (!res.ok) {
-        throw new Error(`Failed to fetch: ${res.status}`);
-    }
-    const html = await res.text();
-    const $ = cheerio.load(html);
-    $('div > nav:nth-of-type(2) a').each((_, element) => {
-        const href = $(element).attr('href');
-        links.push(href);
-    });
+    const links = await fetchSitemap();
+    console.log(`Scraping ${links.length} links`);
     for (let i = 0; i < links.length; i++) {
         const tempQuestions = await scrap(links[i], "")
         questions = [...questions, ...tempQuestions];
@@ -266,9 +325,7 @@ const scrapAll = async () => {
 export async function scrapeData() {
     try {
         const oldQuestion = JSON.parse(JSON.stringify(existingQuestionJson)) as Question[]
-        let questions = await scrapAll();
-        let stateQuestion = await scrapStates();
-        const allQuestion = [...questions, ...stateQuestion];
+        let allQuestion = await scrapAll();
 
         for (let i = 0; i < allQuestion.length; i++) {
             if (!allQuestion[i].question) {
