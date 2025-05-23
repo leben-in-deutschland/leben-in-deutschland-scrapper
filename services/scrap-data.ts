@@ -150,11 +150,11 @@ async function getContext(question: Question) {
         }
 
         const data = await response.json();
-        const category = data.choices[0].message.content;
+        const context = data.choices[0].message.content;
         console.log(`Fetched Context ${question.num}`);
-        return category;
+        return context;
     } catch (err) {
-        console.error('Error Category:', err);
+        console.error('Error Context:', err);
         return "General";
     }
 }
@@ -338,9 +338,9 @@ export async function scrapeData() {
                 allQuestion[i].category = oldQuestion[existing].category;
                 allQuestion[i].context = oldQuestion[existing].context;
             } else {
-                allQuestion[i].translation = await translate(allQuestion[i]);
                 allQuestion[i].category = await findCategory(allQuestion[i]);
                 allQuestion[i].context = await getContext(allQuestion[i]);
+                allQuestion[i].translation = await translate(allQuestion[i]);
             }
         }
         const dir = './data';
