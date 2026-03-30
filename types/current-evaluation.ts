@@ -1,4 +1,13 @@
-export interface CurrentEvaluation {
-    //currently evaluating tests up to the exam date
+export interface EvaluationRecord {
+    // the exam date BAMF is currently evaluating (DD.MM.YYYY)
     examDate: string;
+    // ISO date when this was observed (YYYY-MM-DD)
+    checkedAt: string;
+}
+
+export interface CurrentEvaluation {
+    // the latest exam date BAMF is currently evaluating
+    examDate: string;
+    // timeseries of historical evaluation dates
+    history: EvaluationRecord[];
 }

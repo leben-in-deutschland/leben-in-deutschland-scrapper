@@ -1,0 +1,35 @@
+name: Check BAMF Evaluation Date
+on:
+  schedule:
+    - cron: "0 6 * * *" # Daily at 6 AM UTC
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  check_evaluation:
+    name: Check Evaluation Date
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23.x"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check evaluation date
+        run: npm run check-evaluation
+
+      - name: Commit and Push Changes
+        continue-on-error: true
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add data/current-evaluation.json
+          git commit -m "Update BAMF evaluation date"
+          git push

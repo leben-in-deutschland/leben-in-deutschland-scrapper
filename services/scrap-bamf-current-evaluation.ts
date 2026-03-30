@@ -2,44 +2,54 @@ import evaluationData from '../data/current-evaluation.json';
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as path from 'path';
-import { CurrentEvaluation } from '../types/current-evaluation';
+import { CurrentEvaluation, EvaluationRecord } from '../types/current-evaluation';
 
-const scrapCurrentEvaluation = async () => {
+const scrapCurrentEvaluation = async (): Promise<string> => {
     const url = 'https://www.bamf.de/DE/Themen/Integration/ZugewanderteTeilnehmende/Einbuergerung/einbuergerung-node.html';
     const pageData = await cheerio.fromURL(url);
-
-    const currentEvaluation: CurrentEvaluation = {
-        examDate: pageData('div>div.c-service-box__container>p>strong').text().trim()
-    };
-
-    return currentEvaluation;
+    return pageData('div>div.c-service-box__container>p>strong').text().trim();
 };
 
 export async function scrapCurrentEvaluationData() {
     try {
-        const currentEvalDate = await scrapCurrentEvaluation();
-        console.log('Current Evaluation Data:', currentEvalDate);
-        if (currentEvalDate.examDate === '') {
+        const examDate = await scrapCurrentEvaluation();
+        console.log('Current Evaluation Date:', examDate);
+
+        if (examDate === '') {
             throw new Error('No current evaluation date found on the page.');
         }
-        if (currentEvalDate.examDate === evaluationData.examDate) {
+
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const existing: CurrentEvaluation = evaluationData as CurrentEvaluation;
+
+        // Check if the examDate has changed since last check
+        if (examDate === existing.examDate) {
             console.log('No new evaluation data found, exiting.');
             return;
         }
 
+        // Append new record to history
+        const newRecord: EvaluationRecord = {
+            examDate,
+            checkedAt: today
+        };
+
+        const updatedData: CurrentEvaluation = {
+            examDate,
+            history: [...(existing.history || []), newRecord]
+        };
+
         const dir = './data';
         const filePath = path.join(dir, 'current-evaluation.json');
 
-        // Ensure the directory exists
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }
-        // Write the JSON data to a file
-        fs.writeFileSync(filePath, JSON.stringify(currentEvalDate, null, 2), { encoding: 'utf8' });
-        console.log(`Data scraped and saved to ${filePath}`);
+
+        fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2) + '\n', { encoding: 'utf8' });
+        console.log(`Evaluation date updated to ${examDate}, saved to ${filePath}`);
 
     } catch (error) {
         console.error('Error scraping data:', error);
     }
-
 }

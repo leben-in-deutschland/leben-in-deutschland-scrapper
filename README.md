@@ -24,3 +24,22 @@ Non-Affiliation Disclaimer: We are not endorsed by, directly affiliated with, ma
 - Dashboard with statistics
 - Find the location of the exam center
 - Access to all 300 questions and state-related questions
+- BAMF evaluation date tracking with historical timeseries
+
+## Data Pipelines
+
+### Sync Questions & Prüfstellen (every 15 days)
+
+Scrapes all 300+ questions (with AI-powered translations to 7 languages), test center locations, and the current BAMF evaluation date. Runs via `npm run prod`.
+
+### Check BAMF Evaluation Date (daily)
+
+A lightweight daily pipeline that only checks which exam date BAMF is currently evaluating. When the date changes, it appends a new record to the timeseries in `data/current-evaluation.json`. This tracks how far behind BAMF's evaluation processing is over time. Runs via `npm run check-evaluation`.
+
+## Data Files
+
+| File | Description |
+|---|---|
+| `data/question.json` | All questions with translations, categories, and AI-generated context |
+| `data/prüfstellen.json` | Test center locations for all 16 German states |
+| `data/current-evaluation.json` | Current BAMF evaluation date + historical timeseries |
