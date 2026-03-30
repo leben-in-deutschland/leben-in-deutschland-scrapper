@@ -30,6 +30,6 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add data/current-evaluation.json
+          git add data/current-evaluation.json config.json
           git commit -m "Update BAMF evaluation date"
           git push

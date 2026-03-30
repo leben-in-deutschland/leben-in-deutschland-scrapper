@@ -19,24 +19,19 @@ export async function scrapCurrentEvaluationData() {
             throw new Error('No current evaluation date found on the page.');
         }
 
-        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const now = new Date().toISOString();
+        const today = now.split('T')[0]; // YYYY-MM-DD
         const existing: CurrentEvaluation = evaluationData as CurrentEvaluation;
 
-        // Check if the examDate has changed since last check
-        if (examDate === existing.examDate) {
-            console.log('No new evaluation data found, exiting.');
-            return;
-        }
+        const dateChanged = examDate !== existing.examDate;
 
-        // Append new record to history
-        const newRecord: EvaluationRecord = {
-            examDate,
-            checkedAt: today
-        };
-
+        // Build updated data — always update lastSyncAt, append history only on date change
         const updatedData: CurrentEvaluation = {
             examDate,
-            history: [...(existing.history || []), newRecord]
+            lastSyncAt: now,
+            history: dateChanged
+                ? [...(existing.history || []), { examDate, checkedAt: today }]
+                : existing.history || []
         };
 
         const dir = './data';
@@ -47,7 +42,12 @@ export async function scrapCurrentEvaluationData() {
         }
 
         fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2) + '\n', { encoding: 'utf8' });
-        console.log(`Evaluation date updated to ${examDate}, saved to ${filePath}`);
+
+        if (dateChanged) {
+            console.log(`Evaluation date updated to ${examDate}, saved to ${filePath}`);
+        } else {
+            console.log(`No new evaluation data, lastSyncAt updated in ${filePath}`);
+        }
 
     } catch (error) {
         console.error('Error scraping data:', error);

@@ -42,4 +42,5 @@ A lightweight daily pipeline that only checks which exam date BAMF is currently 
 |---|---|
 | `data/question.json` | All questions with translations, categories, and AI-generated context |
 | `data/prüfstellen.json` | Test center locations for all 16 German states |
-| `data/current-evaluation.json` | Current BAMF evaluation date + historical timeseries |
+| `data/current-evaluation.json` | Current BAMF evaluation date, last sync time, and historical timeseries |
+| `config.json` | Last sync timestamps for each pipeline |
