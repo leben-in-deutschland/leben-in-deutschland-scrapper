@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { formatGermanDateTime } from './date-utils';
 
 export interface Config {
     syncQuestions: { lastSyncAt: string };
@@ -15,7 +16,7 @@ function readConfig(): Config {
 
 export function updateConfigSyncTime(pipeline: keyof Config): void {
     const config = readConfig();
-    config[pipeline].lastSyncAt = new Date().toISOString();
+    config[pipeline].lastSyncAt = formatGermanDateTime(new Date());
     fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2) + '\n', { encoding: 'utf8' });
     console.log(`Updated config.json: ${pipeline}.lastSyncAt = ${config[pipeline].lastSyncAt}`);
 }

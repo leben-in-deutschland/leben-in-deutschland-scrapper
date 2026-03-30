@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as path from 'path';
 import { CurrentEvaluation, EvaluationRecord } from '../types/current-evaluation';
+import { formatGermanDate, formatGermanDateTime } from './date-utils';
 
 const scrapCurrentEvaluation = async (): Promise<string> => {
     const url = 'https://www.bamf.de/DE/Themen/Integration/ZugewanderteTeilnehmende/Einbuergerung/einbuergerung-node.html';
@@ -19,8 +20,7 @@ export async function scrapCurrentEvaluationData() {
             throw new Error('No current evaluation date found on the page.');
         }
 
-        const now = new Date().toISOString();
-        const today = now.split('T')[0]; // YYYY-MM-DD
+        const now = new Date();
         const existing: CurrentEvaluation = evaluationData as CurrentEvaluation;
 
         const dateChanged = examDate !== existing.examDate;
@@ -28,9 +28,9 @@ export async function scrapCurrentEvaluationData() {
         // Build updated data — always update lastSyncAt, append history only on date change
         const updatedData: CurrentEvaluation = {
             examDate,
-            lastSyncAt: now,
+            lastSyncAt: formatGermanDateTime(now),
             history: dateChanged
-                ? [...(existing.history || []), { examDate, checkedAt: today }]
+                ? [...(existing.history || []), { examDate, checkedAt: formatGermanDate(now) }]
                 : existing.history || []
         };
 

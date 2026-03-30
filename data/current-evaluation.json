@@ -1,94 +1,94 @@
 {
   "examDate": "03.03.2026",
-  "lastSyncAt": "2026-03-30T13:48:05Z",
+  "lastSyncAt": "30.03.2026 13:48:05",
   "history": [
     {
       "examDate": "17.03.2025",
-      "checkedAt": "2025-06-01"
+      "checkedAt": "01.06.2025"
     },
     {
       "examDate": "24.03.2025",
-      "checkedAt": "2025-06-16"
+      "checkedAt": "16.06.2025"
     },
     {
       "examDate": "22.04.2025",
-      "checkedAt": "2025-07-01"
+      "checkedAt": "01.07.2025"
     },
     {
       "examDate": "07.05.2025",
-      "checkedAt": "2025-07-16"
+      "checkedAt": "16.07.2025"
     },
     {
       "examDate": "23.05.2025",
-      "checkedAt": "2025-07-31"
+      "checkedAt": "31.07.2025"
     },
     {
       "examDate": "10.06.2025",
-      "checkedAt": "2025-08-16"
+      "checkedAt": "16.08.2025"
     },
     {
       "examDate": "23.06.2025",
-      "checkedAt": "2025-08-31"
+      "checkedAt": "31.08.2025"
     },
     {
       "examDate": "18.07.2025",
-      "checkedAt": "2025-09-16"
+      "checkedAt": "16.09.2025"
     },
     {
       "examDate": "27.08.2025",
-      "checkedAt": "2025-10-01"
+      "checkedAt": "01.10.2025"
     },
     {
       "examDate": "22.09.2025",
-      "checkedAt": "2025-10-16"
+      "checkedAt": "16.10.2025"
     },
     {
       "examDate": "10.10.2025",
-      "checkedAt": "2025-10-31"
+      "checkedAt": "31.10.2025"
     },
     {
       "examDate": "21.10.2025",
-      "checkedAt": "2025-11-16"
+      "checkedAt": "16.11.2025"
     },
     {
       "examDate": "30.10.2025",
-      "checkedAt": "2025-12-01"
+      "checkedAt": "01.12.2025"
     },
     {
       "examDate": "10.11.2025",
-      "checkedAt": "2025-12-16"
+      "checkedAt": "16.12.2025"
     },
     {
       "examDate": "19.11.2025",
-      "checkedAt": "2025-12-26"
+      "checkedAt": "26.12.2025"
     },
     {
       "examDate": "20.11.2025",
-      "checkedAt": "2025-12-31"
+      "checkedAt": "31.12.2025"
     },
     {
       "examDate": "28.11.2025",
-      "checkedAt": "2026-01-16"
+      "checkedAt": "16.01.2026"
     },
     {
       "examDate": "30.12.2025",
-      "checkedAt": "2026-01-31"
+      "checkedAt": "31.01.2026"
     },
     {
       "examDate": "16.01.2026",
-      "checkedAt": "2026-02-16"
+      "checkedAt": "16.02.2026"
     },
     {
       "examDate": "02.02.2026",
-      "checkedAt": "2026-03-01"
+      "checkedAt": "01.03.2026"
     },
     {
       "examDate": "17.02.2026",
-      "checkedAt": "2026-03-16"
+      "checkedAt": "16.03.2026"
     },
     {
       "examDate": "03.03.2026",
-      "checkedAt": "2026-03-30"
+      "checkedAt": "30.03.2026"
     }
   ]
 }
