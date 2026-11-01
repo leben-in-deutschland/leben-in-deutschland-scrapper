@@ -14,7 +14,7 @@
     "cheerio": "^1.0.0",
     "typescript": "^5.7.3",
     "vite-node": "^3.0.4",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@types/node": "^25.0.3"
