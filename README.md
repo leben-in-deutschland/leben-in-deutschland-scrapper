@@ -1,3 +1,14 @@
+> **Archived on 3 November 2026.** This repository is read-only. Everything it did now lives in
+> [leben-in-deutschland-app](https://github.com/leben-in-deutschland/leben-in-deutschland-app):
+>
+> - the BAMF evaluation date and the exam centres (Prüfstellen) are read from bamf.de by
+>   `scripts/bamf-data-sync.mjs` there, on a daily and a weekly schedule, into `src/web/data/`;
+> - questions come only from the official BAMF *Gesamtfragenkatalog* PDF (`src/catalogue/`), with
+>   translations and explanations written in that pipeline - the third-party question scraper and the
+>   translator API are retired.
+>
+> The data files in this repository stop updating with this commit; the app reads its own copies.
+
 <p align="center">
   <a href="https://github.com/bitesinbyte/leben-in-deutschland">
     <img src="https://raw.githubusercontent.com/bitesinbyte/leben-in-deutschland/refs/heads/main/src/web/public/android-chrome-512x512.png" width="256px" />
